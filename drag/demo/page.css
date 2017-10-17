@@ -1,0 +1,16 @@
+body{
+	padding:50px;
+	background-color:#F0F0F0;
+	font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	color:#093E56;
+}
+
+h1{
+	font-style:italic;
+	text-shadow:0 1px 0 #ccc;
+	font-weight:normal;
+}
+
+a{
+	outline:none
+}
