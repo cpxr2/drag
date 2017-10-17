@@ -6,9 +6,9 @@ function hideBouton(){
 
 
 function boutonMenu(btn, elm, cpt){
-    
+
     $(btn).click(function(){
-    hideBouton();
+        hideBouton();
         cpt++;
         if(cpt%2){
             $(elm).show();
@@ -17,3 +17,18 @@ function boutonMenu(btn, elm, cpt){
         }    
     });
 }
+
+
+//*********** FONCTION BOUTON **********************
+function boutonEdition(){
+    $(".supprime").click(function(){
+        // je supprime toute le contenu de la colonne qui contient le bouton
+        $(this).parent().parent().parent().empty();
+    });
+
+    $(".edition").click(function(){
+        // je recupere le texte dans la colonne
+        editionText = $(this).parent().parent().text();
+        console.log(editionText);
+    });
+                        }

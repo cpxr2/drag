@@ -39,11 +39,11 @@ body
 }
 ul
 {
-  list-style-type: none;
+    list-style-type: none;
 }
 .column
 {
-     border: 1px dashed black;
+    border: 1px dashed black;
     min-height: 80px;
 }
 .ligne
@@ -58,4 +58,11 @@ ul
     width: 30px;
     margin: 10px;
     text-align: center;
+}
+.edit
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+
 }

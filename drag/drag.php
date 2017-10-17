@@ -36,18 +36,15 @@
                 </div>
 
 
-
-
                 <!-- la zone de drop-->
                 <div class="col-sm-10" id="page_drop">
-
+                    <ul></ul>
                 </div>
-
 
                 <!-- ****************************** MODAL *************************-->
 
-
-                <div id="mod"></div>
+                <div id="modVideo" title="Ajouter une video"><input type="text" id="lienVideo" /></div>
+                <div id="modText"></div>
 
 
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -59,3 +56,6 @@
                 </body>
             </html>
         <!--Ad quibusdam fidelissimae, se do magna voluptate.-->
+
+
+
