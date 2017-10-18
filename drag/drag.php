@@ -31,7 +31,8 @@
                     <div class="row">
                         <div id="btnTexte" class="col-sm-4 htmlElt"><i class="fa fa-font" aria-hidden="true"></i></div>
                         <div id="btnImg" class="col-sm-4 htmlElt"><i class="fa fa-picture-o" aria-hidden="true"></i></div>
-                        <div id="btnImg" class="col-sm-4 htmlElt"><i class="fa fa-youtube" aria-hidden="true"></i></div>
+                        <div id="btnVideo" class="col-sm-4 htmlElt"><i class="fa fa-youtube" aria-hidden="true"></i></div>
+                        <div id="btnMap" class="col-sm-4 htmlElt"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                     </div>
                 </div>
 
@@ -43,15 +44,26 @@
 
                 <!-- ****************************** MODAL *************************-->
 
-                <div id="modVideo" title="Ajouter une video"><input type="text" id="lienVideo" /></div>
+                <div id="modVideo" title="Ajouter une video"></div>
                 <div id="modText"></div>
+                <div id="modMap">
+                    <h3>Google Maps</h3>
+                    <div id="map"></div>
+                    
+                    <div><label for="longitude">Longitude : </label><input type="number" id="longitude" value="-0.673608"/></div><br />                    
+                    <div><label for="latitude">Latitude : </label><input type="number" id="latitude" value="44.833088" /></div><br />                    
+                    <div><label for="zoom">Zoom : </label><input type="number" id="zoom" value="15" /></div>                    
+
+                </div>
 
 
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSGviqWFmjq6gjLveBMNdzAwpj11SkD_o"></script>
                 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
-                <script src="js/fonctions.js"></script>
+                <!--<script src="js/fonctions.js"></script>-->
                 <script src="js/script.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
                 </body>
             </html>

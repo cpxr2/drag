@@ -12,8 +12,37 @@ var colonneHtml = {
 }
 var edition = '<div class="edit"><button class="btn btn-primary btnEdit edition"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button><button class="btn btn-danger btnEdit supprime"><i class="fa fa-trash" aria-hidden="true"></i></button></div>';
 var editionText = "";
+var idVideo = "";
 
+//******* FONCTION GOOGLE MAP ********
+function initMap(lati, longi, zoom, m) {
+    var uluru = {lat: lati, lng: longi};
+    var map = new google.maps.Map(document.getElementById(m), {
+        zoom: zoom,
+        center: uluru,
+        draggable: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true
+    });
+    var marker = new google.maps.Marker({
+        position: uluru,
+        map: map
+    });
+}
 
+//****** FONCTION ID ALEATOIRE *****
+function idAleatoire(){
+    var idAl = new Date().getTime();
+    return idAl;
+}
+
+//********** BOUTON SUPPRIME **********
+$(".supprime").each(function(){
+    $(this).click(function(){
+        // je supprime toute le contenu de la colonne qui contient le bouton
+    $(this).parent().parent().parent().empty();
+    });    
+});
 
 $(".drag").draggable({
     containment: '#page_drop',   
@@ -47,8 +76,10 @@ $("#page_drop").droppable({
                 let idDrag = ui.draggable[0].id;
                 let col = this;
                 //console.log(this);
-                
-                //*************** TEXTE **********************
+
+                /*****************************************************
+                        TEXTE
+*****************************************************/
 
                 if(idDrag=="btnTexte"){
 
@@ -58,21 +89,35 @@ $("#page_drop").droppable({
                     $( "#modText" ).dialog({
                         dialogClass: "no-close",
                         width: 510,
+                        create: function(e, ui){
+                            $('#modText').summernote({                        
+                                height: 200, 
+                                width: 500,
+                                minHeight: null,             
+                                maxHeight: null,             
+                                focus: true
+                            });
+
+                            if(editionText == ""){
+                                $('#modText').summernote('editor.insertText', texteDefault);
+                            }else{
+                                $('#modText').summernote('editor.insertText', editionText);  
+                            }
+                        },
                         buttons: [
                             {
                                 text: "OK",
 
                                 click: function() {
-
                                     $( this ).dialog( "close" );
-
                                     // je recupere le contenu de l'editeur de texte et je le met dans ma colonne
-                                    $(col).html($(this).summernote('code'));
+                                    $(col).append($(this).summernote('code'));
                                     // je lui donne un "id" en auto increment
-                                    $(col).children().attr('id', 'elt'+(nb++));
+                                    $(col).children().attr('id', idAleatoire());
+                                    editionText = "";
                                     // je rajoute les boutons d'edition et de suppression
                                     $(col).append(edition);
-
+                                    console.log(editionText);
                                     //*********** FONCTION BOUTON **********************
 
                                     $(".supprime").click(function(){
@@ -84,6 +129,8 @@ $("#page_drop").droppable({
                                         // je recupere le texte dans la colonne
                                         editionText = $(this).parent().parent().text();
                                         console.log(editionText);
+
+                                        //****************** 2EME MODAL *****************
 
                                         // je crée un nouvelle MODAL
                                         $( "#modText" ).dialog({
@@ -100,41 +147,42 @@ $("#page_drop").droppable({
                                                 }
                                             ]
                                         });
-
-
                                     });
                                 }
                             }
                         ]
-                    });
-                    $('#modText').summernote({                        
-                        height: 200, 
-                        width: 500,
-                        minHeight: null,             
-                        maxHeight: null,             
-                        focus: true
-                    });
-                    if(editionText == ""){
-                        $('#mod').summernote('editor.insertText', texteDefault);
-                    }else{
-                        $('#mod').summernote('editor.insertText', editionText);  
-                    }
-
+                    });                  
                 } 
 
-                if(idDrag=="btnImg"){
+                /*****************************************************
+                        VIDEO
+*****************************************************/
+
+                if(idDrag=="btnVideo"){
+
 
                     $( "#modVideo" ).dialog({
                         dialogClass: "no-close",
+                        create: function(){
+                            $("#modVideo").append('<input type="text" id=' + idAleatoire() + '/>');
+                            idVideo = $("#modVideo").find("input").attr("id");
+                        },
                         buttons: [
                             {
                                 text: "OK",
                                 click: function() {
-                                    let lien = $("#lienVideo").val();
-                                    $( this ).dialog( "close" );
-                                    $(col).html('<span><iframe width="450" height="280" src=' +lien+ ' frameborder="0" allowfullscreen></iframe></span>');
+                                    let liensaisi = $(idVideo).val();                                   
+                                    lien = liensaisi.replace("watch?v=", "embed/");
+                                    //je recupere la largeur de la div et j'adapte la hauteur pour la video
+                                    let largeurDiv = $(col).width();
+                                    let hauteurDiv = largeurDiv/2;
+                                    $(col).html('<span><iframe width="" height="" src="" frameborder="0" allowfullscreen></iframe></span>');
+                                    $(col).find('iframe').attr("width", (largeurDiv-20));
+                                    $(col).find('iframe').attr("height", hauteurDiv);
+                                    $(col).find('iframe').attr("src", lien);
                                     $(col).append(edition);
-                                    
+
+                                    $( this ).dialog( "close" );
                                     //*********** FONCTION BOUTON **********************
 
                                     $(".supprime").click(function(){
@@ -143,19 +191,26 @@ $("#page_drop").droppable({
                                     });
 
                                     $(".edition").click(function(){
-                                        
+
 
                                         // je crée un nouvelle MODAL
                                         $( "#modvideo" ).dialog({
                                             dialogClass: "no-close",
                                             width: 510,
+                                            create: function(){
+                                                $("#modVideo").html('<input type="text" id=' + idVideo + '/>');
+                                            },
                                             buttons: [
                                                 {
                                                     text: "OK",
                                                     click: function() {
+                                                        let liensaisi = $(idVideo).val();
+                                                        lien = liensaisi.replace("watch?v=", "embed/");
                                                         $( this ).dialog( "close" );
-                                                        $(col).find('span').html('<iframe width="560" height="315" src=' +lien+ ' frameborder="0" allowfullscreen></iframe>');
-                                                        
+                                                        $(col).find('iframe').attr("src", lien);
+
+
+
                                                     }
                                                 }
                                             ]
@@ -169,7 +224,83 @@ $("#page_drop").droppable({
                     });
 
                 }
-            }});
+
+                /*****************************************************
+                            MAPS
+*****************************************************/
+
+                if(idDrag=="btnMap"){
+                    $( "#modMap" ).dialog({
+                        dialogClass: "no-close",
+                        create: function(){
+
+                            let longi =  -0.67432;
+                            let lati = 44.833078;
+                            let zoom = 15;
+
+                            initMap(lati, longi, zoom, "map");
+                        },
+                        buttons: [
+                            {
+                                text: "OK",
+                                click: function() {
+                                    let largeurDiv = $(col).width();                                    
+                                    $(col).append('<div class="mapCol" id=' + idAleatoire() + '></div');
+                                    let mapID = $(col).children().attr("id");
+                                    $(mapID).attr("width", largeurDiv);
+                                    //$("#mapCol").attr("height", largeurDiv);
+
+
+                                    longi = parseFloat($("#longitude").val());
+                                    lati = parseFloat($("#latitude").val());
+                                    zoom = parseFloat($("#zoom").val());                                  
+
+
+                                    initMap(lati, longi, zoom, mapID);
+
+
+                                    $(col).append(edition);
+
+                                    $( this ).dialog( "close" );
+                                    //*********** FONCTION BOUTON **********************
+
+                                    $(".supprime").click(function(){
+                                        // je supprime toute le contenu de la colonne qui contient le bouton
+                                        $(this).parent().parent().parent().empty();
+                                    });
+
+                                    $(".edition").click(function(){
+
+
+                                        // je crée un nouvelle MODAL
+                                        $( "#modMap" ).dialog({
+                                            dialogClass: "no-close",
+                                            width: 510,
+                                            create: function(){
+
+                                            },
+                                            buttons: [
+                                                {
+                                                    text: "OK",
+                                                    click: function() {
+
+                                                    }
+                                                }
+                                            ]
+                                        });
+
+
+                                    });
+                                }
+                            }
+                        ]
+                    });
+
+                }
+
+            }
+            // ******* fin du droppable ********
+        });
 
         $("#page_drop").sortable({
             axis: "y",
