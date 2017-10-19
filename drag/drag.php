@@ -49,12 +49,13 @@
 
                 <div id="modImg" title="Ajouter un image">
                     
-                    <div id="zone_img"></div>
+                    <div class="row" id="zone_img"></div>
                     
                     <div id="form">
                         <form id="formImg" enctype="multipart/form-data" method="post" name="formImg" >
                             <input type='file' id="imgUp" name="imgUp"/>
                         </form>
+                        <div id="resultat"></div>
                     </div>
                 </div>
 

@@ -104,3 +104,7 @@ label
     width: 300px;
     min-height: 400px;
 }
+#modImg 
+{
+    display: none;
+}

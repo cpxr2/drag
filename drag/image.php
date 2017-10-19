@@ -1,6 +1,6 @@
 <?php
 require 'connexion.php';
-
+$tabImg=[];
 $nb = round(gettimeofday(true));
 
 if ($_FILES['imgUp']['name'] !='')
@@ -21,7 +21,7 @@ if ($_FILES['imgUp']['name'] !='')
             // Début des vérifications de sécurité...
             if(!in_array($extension, $extensions)) //Si l'extension n'est pas dans le tableau
             {
-                echo 'Vous devez uploader un fichier de type png, gif, jpg, jpeg';
+                $tabImg[count($tabImg)] = 'Vous devez uploader un fichier de type png, gif, jpg, jpeg';
                 exit();
             }
             if($taille>$taille_maxi)
@@ -37,11 +37,17 @@ if ($_FILES['imgUp']['name'] !='')
 
             if(move_uploaded_file($_FILES['imgUp']['tmp_name'], 'images/' . $nom_image )!=true) 
             {
-                echo 'Erreur lors de l\'upload de l\'image.';
+                $tabImg[count($tabImg)] = 'Erreur lors de l\'upload de l\'image.';
                 exit();
             }
         }
 
-        echo 'Le fichier a été uploadé';
+        $tabImg[count($tabImg)] = 'Le fichier a été uploadé';
     }
+ 
+    $req = $bdd->query('SELECT chemin_img FROM images');
+    while($res = $req->fetch(PDO::FETCH_NUM )){
+        $tabImg[count($tabImg)] = $res;
+    } 
+echo json_encode($tabImg);
 

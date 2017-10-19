@@ -309,58 +309,97 @@ $("#page_drop").droppable({
                         dialogClass: "no-close",
                         width: 600,
                         create: function(){
-                                
+
                             $.post(
-                                        'recupImgAjax.php',
-                                           function(d){
-                                               data = JSON.parse(d)
-                                        for(i=0; i<data.length; i++){
-                                            $("#zone_img").append('<img src="' + data[i] + '" />');
-                                        }
+                                'recupImgAjax.php',
+                                function(d){
+                                    data = JSON.parse(d)
+                                    console.log(data);
+                                    for(i=0; i<data.length; i++){
+                                        $("#zone_img").append('<img class="col-xs_4" width="75" height="75" src="' + data[i] + '" />');
                                     }
-                                    );
+                                    $("img").click(function(){
+                                        // reglage des dimension de l'image
+                                        let largeurDiv = $(col).width();
+                                        let hauteurDiv = largeurDiv/2;
+
+                                        $(col).find('img').attr("width", (largeurDiv));
+                                        $(col).find('img').attr("height", hauteurDiv);
+
+                                        var source = $(this).attr("src");
+                                        $(col).append('<img class="imgCol" id="' + idAleatoire() + '" src="" />');
+                                        $(col).children().attr('src', source);
+                                        $("#modImg").dialog( "close" );
+                                        $(col).append(edition);
+
+
+                                        //*********** FONCTION BOUTON **********************
+
+                                        $(".supprime").click(function(){
+                                            // je supprime toute le contenu de la colonne qui contient le bouton
+                                            $(this).parent().parent().parent().empty();
+                                        });
+
+                                        $(".edition").click(function(){
+                                        });
+                                    });
+
+                                }
+                            );
 
 
                         },
                         buttons: 
-                            {
-                                "choisir": function(){
-                                    $( this ).dialog( "close" );
-                                },
-                                
-                                "Envoyer": function() {
+                        {          
 
-                                    var form = document.forms.namedItem("formImg");
-                                    var dataImg = new FormData(document.forms.namedItem("formImg"));
-                                    
-                                    $.post({
-                                        url: "image.php",
-                                        data: dataImg,
-                                        success: function(data){
-                                            //afficher la confirmation d'upload quelque part
-                                        },
-                                        processData: false,
-                                        contentType: false,
-                                    });
-                                    
-                                    $( this ).dialog( "close" );
+                            "Envoyer": function() {
+
+                                var form = document.forms.namedItem("formImg");
+                                var dataImg = new FormData(document.forms.namedItem("formImg"));
+
+                                $.post({
+                                    url: "image.php",
+                                    data: dataImg,
+                                    success: function(d){
+
+                                        $("#zone_img").empty();
+
+                                        data = JSON.parse(d)
+                                        console.log(data);
+                                        for(i=1; i<data.length; i++){
+                                            $("#zone_img").append('<img class="col-xs_4" width="75" height="75" src="' + data[i] + '" />');
+                                        }
+                                        //affichage du message de resultat de l'upload
+                                        $("#resultat").html(data[0]); 
+
+                                        //click sur images
+                                        $("img").click(function(){
+                                            var source = $(this).attr("src");
+                                            $(col).append('<img class="imgCol" id="' + idAleatoire() + '" src="" />');
+                                            $(col).children().attr('src', source);
+                                            $("#modImg").dialog( "close" );
+                                        });
+
+                                    },
+                                    processData: false,
+                                    contentType: false,
+                                });
+
+                                $(col).append(edition);
 
 
-                                    //*********** FONCTION BOUTON **********************
+                                //*********** FONCTION BOUTON **********************
 
-                                    $(".supprime").click(function(){
-                                        // je supprime toute le contenu de la colonne qui contient le bouton
-                                        $(this).parent().parent().parent().empty();
-                                    });
+                                $(".supprime").click(function(){
+                                    // je supprime toute le contenu de la colonne qui contient le bouton
+                                    $(this).parent().parent().parent().empty();
+                                });
 
-                                    $(".edition").click(function(){
-
-                                    });
-
-
-                                }
+                                $(".edition").click(function(){
+                                });
                             }
-                        
+                        }
+
                     });
                 }
 
