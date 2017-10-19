@@ -46,10 +46,22 @@
 
                 <div id="modVideo" title="Ajouter une video"></div>
                 <div id="modText"></div>
+
+                <div id="modImg" title="Ajouter un image">
+                    
+                    <div id="zone_img"></div>
+                    
+                    <div id="form">
+                        <form id="formImg" enctype="multipart/form-data" method="post" name="formImg" >
+                            <input type='file' id="imgUp" name="imgUp"/>
+                        </form>
+                    </div>
+                </div>
+
                 <div id="modMap">
                     <h3>Google Maps</h3>
                     <div id="map"></div>
-                    
+
                     <div><label for="longitude">Longitude : </label><input type="number" id="longitude" value="-0.673608"/></div><br />                    
                     <div><label for="latitude">Latitude : </label><input type="number" id="latitude" value="44.833088" /></div><br />                    
                     <div><label for="zoom">Zoom : </label><input type="number" id="zoom" value="15" /></div>                    

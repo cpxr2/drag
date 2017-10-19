@@ -40,7 +40,7 @@ function idAleatoire(){
 $(".supprime").each(function(){
     $(this).click(function(){
         // je supprime toute le contenu de la colonne qui contient le bouton
-    $(this).parent().parent().parent().empty();
+        $(this).parent().parent().parent().empty();
     });    
 });
 
@@ -164,14 +164,14 @@ $("#page_drop").droppable({
                     $( "#modVideo" ).dialog({
                         dialogClass: "no-close",
                         create: function(){
-                            $("#modVideo").append('<input type="text" id=' + idAleatoire() + '/>');
+                            $("#modVideo").append('<input type="text" id="' + idAleatoire() + '"/>');
                             idVideo = $("#modVideo").find("input").attr("id");
                         },
                         buttons: [
                             {
                                 text: "OK",
                                 click: function() {
-                                    let liensaisi = $(idVideo).val();                                   
+                                    let liensaisi = $('#'+idVideo).val();                                   
                                     lien = liensaisi.replace("watch?v=", "embed/");
                                     //je recupere la largeur de la div et j'adapte la hauteur pour la video
                                     let largeurDiv = $(col).width();
@@ -298,9 +298,74 @@ $("#page_drop").droppable({
 
                 }
 
-            }
-            // ******* fin du droppable ********
-        });
+
+
+                /*****************************************************
+                           IMAGES
+*****************************************************/           
+
+                if(idDrag=="btnImg"){
+                    $( "#modImg" ).dialog({
+                        dialogClass: "no-close",
+                        width: 600,
+                        create: function(){
+                                
+                            $.post(
+                                        'recupImgAjax.php',
+                                           function(d){
+                                               data = JSON.parse(d)
+                                        for(i=0; i<data.length; i++){
+                                            $("#zone_img").append('<img src="' + data[i] + '" />');
+                                        }
+                                    }
+                                    );
+
+
+                        },
+                        buttons: 
+                            {
+                                "choisir": function(){
+                                    $( this ).dialog( "close" );
+                                },
+                                
+                                "Envoyer": function() {
+
+                                    var form = document.forms.namedItem("formImg");
+                                    var dataImg = new FormData(document.forms.namedItem("formImg"));
+                                    
+                                    $.post({
+                                        url: "image.php",
+                                        data: dataImg,
+                                        success: function(data){
+                                            //afficher la confirmation d'upload quelque part
+                                        },
+                                        processData: false,
+                                        contentType: false,
+                                    });
+                                    
+                                    $( this ).dialog( "close" );
+
+
+                                    //*********** FONCTION BOUTON **********************
+
+                                    $(".supprime").click(function(){
+                                        // je supprime toute le contenu de la colonne qui contient le bouton
+                                        $(this).parent().parent().parent().empty();
+                                    });
+
+                                    $(".edition").click(function(){
+
+                                    });
+
+
+                                }
+                            }
+                        
+                    });
+                }
+
+                // ******* fin du droppable ********
+            }});
 
         $("#page_drop").sortable({
             axis: "y",
