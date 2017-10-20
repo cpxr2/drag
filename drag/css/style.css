@@ -13,8 +13,12 @@ body
 }
 #page_drop
 {
-    margin: auto;    
-    height: 600px;
+    margin: auto;   
+    
+}
+.page_drop
+{
+    min-height: 600px;
     border: 1px solid black;
 }
 #principal
@@ -41,7 +45,7 @@ ul
 {
     list-style-type: none;
 }
-.column
+.columnBorder
 {
     border: 1px dashed black;
     min-height: 80px;
@@ -107,4 +111,14 @@ label
 #modImg 
 {
     display: none;
+}
+#message
+{
+    color: red;
+    font-size: 30px;
+    text-align: center;
+}
+.imgCom
+{
+    width: 100%;
 }

@@ -5,14 +5,19 @@ var nb = 0;
 var contenu = $("body").html(); // tout le contenu HTML pour la bdd
 var texteDefault = "Pariatur varias lorem et malis, duis eiusmod in esse varias. Admodum irure proident quamquam. Ita dolor doctrina transferrem sed eiusmod aliqua vidisse.Senserit ita summis, appellat aute ipsum ea summis. Quo nescius ab admodum, sednam familiaritatem. Ex ullamco si offendit ad ita elit nescius distinguantur iishic dolor proident te dolor qui laborum eu aute hic quo varias tempor autappellat noster tamen ut malis, ad elit offendit sed illum do voluptate.Occaecat a eram arbitror, duis de iudicem qui velit. Hic a culpa eram irure non consequat legam irure ut tamen."
 var colonneHtml = {
-    '1c': '<div class="col-md-12 column"></div>',
-    '2c': '<div class="col-md-6 column"></div><div class="col-md-6 column"></div>',
-    '3c': '<div class="col-md-4 column"></div><div class="col-md-4 column"></div><div class="col-md-4 column"></div>',
-    '4c': '<div class="col-md-3 column"></div><div class="col-md-3 column"></div><div class="col-md-3 column"></div><div class="col-md-3 column"></div>'
+    '1c': '<div class="col-md-12 column columnBorder"></div>',
+    '2c': '<div class="col-md-6 column columnBorder"></div><div class="col-md-6 column columnBorder"></div>',
+    '3c': '<div class="col-md-4 column columnBorder"></div><div class="col-md-4 column columnBorder"></div><div class="col-md-4 column columnBorder"></div>',
+    '4c': '<div class="col-md-3 column columnBorder"></div><div class="col-md-3 column columnBorder"></div><div class="col-md-3 column columnBorder"></div><div class="col-md-3 column columnBorder"></div>'
 }
 var edition = '<div class="edit"><button class="btn btn-primary btnEdit edition"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button><button class="btn btn-danger btnEdit supprime"><i class="fa fa-trash" aria-hidden="true"></i></button></div>';
 var editionText = "";
 var idVideo = "";
+
+function recupId(col){
+    var id = $(col).children().attr('id');
+    return id;
+}
 
 //******* FONCTION GOOGLE MAP ********
 function initMap(lati, longi, zoom, m) {
@@ -44,6 +49,8 @@ $(".supprime").each(function(){
     });    
 });
 
+$("#save").hide();
+
 $(".drag").draggable({
     containment: '#page_drop',   
     revert: true
@@ -53,6 +60,12 @@ $(".htmlElt").draggable({
     containement: '.column',
     revert: true
 });
+
+/*****************************************************
+                DROP
+*****************************************************/
+
+
 
 $("#page_drop").droppable({
 
@@ -74,85 +87,34 @@ $("#page_drop").droppable({
             accept: ".htmlElt",
             drop: function(e, ui){
                 let idDrag = ui.draggable[0].id;
-                let col = this;
-                //console.log(this);
+                var col = this;
+
 
                 /*****************************************************
                         TEXTE
-*****************************************************/
+    *****************************************************/
 
                 if(idDrag=="btnTexte"){
 
-                    //*************** MODAL ******************
+                    modalText(col, editionText, texteDefault);
+                    $(col).append(edition);
+
+                    //*********** FONCTION BOUTON **********************
+
+                    $(".supprime").click(function(){
+                        // je supprime toute le contenu de la colonne qui contient le bouton
+                        $(this).parent().parent().parent().empty();
+                    });
+
+                    $(".edition").click(function(){
+                        editionText = $(col).find('p').text();
+                        console.log(editionText);
+                        modalText(col, editionText, texteDefault);
+                        editionText = "";
+                    });
+                }
 
 
-                    $( "#modText" ).dialog({
-                        dialogClass: "no-close",
-                        width: 510,
-                        create: function(e, ui){
-                            $('#modText').summernote({                        
-                                height: 200, 
-                                width: 500,
-                                minHeight: null,             
-                                maxHeight: null,             
-                                focus: true
-                            });
-
-                            if(editionText == ""){
-                                $('#modText').summernote('editor.insertText', texteDefault);
-                            }else{
-                                $('#modText').summernote('editor.insertText', editionText);  
-                            }
-                        },
-                        buttons: [
-                            {
-                                text: "OK",
-
-                                click: function() {
-                                    $( this ).dialog( "close" );
-                                    // je recupere le contenu de l'editeur de texte et je le met dans ma colonne
-                                    $(col).append($(this).summernote('code'));
-                                    // je lui donne un "id" en auto increment
-                                    $(col).children().attr('id', idAleatoire());
-                                    editionText = "";
-                                    // je rajoute les boutons d'edition et de suppression
-                                    $(col).append(edition);
-                                    console.log(editionText);
-                                    //*********** FONCTION BOUTON **********************
-
-                                    $(".supprime").click(function(){
-                                        // je supprime toute le contenu de la colonne qui contient le bouton
-                                        $(this).parent().parent().parent().empty();
-                                    });
-
-                                    $(".edition").click(function(){
-                                        // je recupere le texte dans la colonne
-                                        editionText = $(this).parent().parent().text();
-                                        console.log(editionText);
-
-                                        //****************** 2EME MODAL *****************
-
-                                        // je crée un nouvelle MODAL
-                                        $( "#modText" ).dialog({
-                                            dialogClass: "no-close",
-                                            width: 510,
-                                            buttons: [
-                                                {
-                                                    text: "OK",
-                                                    click: function() {
-                                                        $( this ).dialog( "close" );
-                                                        $(col).find('p').html($(this).summernote('code'));
-                                                        editionText = "";
-                                                    }
-                                                }
-                                            ]
-                                        });
-                                    });
-                                }
-                            }
-                        ]
-                    });                  
-                } 
 
                 /*****************************************************
                         VIDEO
@@ -305,129 +267,102 @@ $("#page_drop").droppable({
 *****************************************************/           
 
                 if(idDrag=="btnImg"){
-                    $( "#modImg" ).dialog({
-                        dialogClass: "no-close",
-                        width: 600,
-                        create: function(){
 
-                            $.post(
-                                'recupImgAjax.php',
-                                function(d){
-                                    data = JSON.parse(d)
-                                    console.log(data);
-                                    for(i=0; i<data.length; i++){
-                                        $("#zone_img").append('<img class="col-xs_4" width="75" height="75" src="' + data[i] + '" />');
-                                    }
-                                    $("img").click(function(){
-                                        // reglage des dimension de l'image
-                                        let largeurDiv = $(col).width();
-                                        let hauteurDiv = largeurDiv/2;
-
-                                        $(col).find('img').attr("width", (largeurDiv));
-                                        $(col).find('img').attr("height", hauteurDiv);
-
-                                        var source = $(this).attr("src");
-                                        $(col).append('<img class="imgCol" id="' + idAleatoire() + '" src="" />');
-                                        $(col).children().attr('src', source);
-                                        $("#modImg").dialog( "close" );
-                                        $(col).append(edition);
+                    modalImage(col);
+                    $(col).append(edition);
 
 
-                                        //*********** FONCTION BOUTON **********************
+                    //*********** FONCTION BOUTON **********************
 
-                                        $(".supprime").click(function(){
-                                            // je supprime toute le contenu de la colonne qui contient le bouton
-                                            $(this).parent().parent().parent().empty();
-                                        });
+                    $(".supprime").click(function(){
+                        // je supprime toute le contenu de la colonne qui contient le bouton
+                        $(this).parent().parent().parent().empty();
+                    });
 
-                                        $(".edition").click(function(){
-                                        });
-                                    });
+                    $(".edition").click(function(){
+                        $(this).parent().parent().empty();
+                        console.log($(this).parent().find("img").attr('id'));
 
-                                }
-                            );
+                        modalImage(col);
+                        // $(this).trigger("create");
+                    });
 
+
+
+
+
+
+
+
+
+
+                    // ******* fin du droppable ********
+                    $("#page_drop").sortable({
+                        axis: "y",
+                        //containement: "#page_drop",
+                        stop: function(e,ui){
+
+                        }            
+                    });
+
+
+
+                    //ajax qui renvoi tout le HTML dans la bdd.
+                    $.post(
+                        'article_ajax.php',
+                        {
+                            "contenu": JSON.stringify(contenu)
+                        },
+                        function(data){
 
                         },
-                        buttons: 
-                        {          
-
-                            "Envoyer": function() {
-
-                                var form = document.forms.namedItem("formImg");
-                                var dataImg = new FormData(document.forms.namedItem("formImg"));
-
-                                $.post({
-                                    url: "image.php",
-                                    data: dataImg,
-                                    success: function(d){
-
-                                        $("#zone_img").empty();
-
-                                        data = JSON.parse(d)
-                                        console.log(data);
-                                        for(i=1; i<data.length; i++){
-                                            $("#zone_img").append('<img class="col-xs_4" width="75" height="75" src="' + data[i] + '" />');
-                                        }
-                                        //affichage du message de resultat de l'upload
-                                        $("#resultat").html(data[0]); 
-
-                                        //click sur images
-                                        $("img").click(function(){
-                                            var source = $(this).attr("src");
-                                            $(col).append('<img class="imgCol" id="' + idAleatoire() + '" src="" />');
-                                            $(col).children().attr('src', source);
-                                            $("#modImg").dialog( "close" );
-                                        });
-
-                                    },
-                                    processData: false,
-                                    contentType: false,
-                                });
-
-                                $(col).append(edition);
-
-
-                                //*********** FONCTION BOUTON **********************
-
-                                $(".supprime").click(function(){
-                                    // je supprime toute le contenu de la colonne qui contient le bouton
-                                    $(this).parent().parent().parent().empty();
-                                });
-
-                                $(".edition").click(function(){
-                                });
-                            }
-                        }
-
-                    });
-                }
-
-                // ******* fin du droppable ********
-            }});
-
-        $("#page_drop").sortable({
-            axis: "y",
-            //containement: "#page_drop",
-            stop: function(e,ui){
-                console.log(ui);
-            }            
+                        'json'
+                    );
+                } 
+            }
         });
-
-
-
-        //ajax qui renvoi tout le HTML dans la bdd.
-        $.post(
-            'article_ajax.php',
-            {
-                "contenu": JSON.stringify(contenu)
-            },
-            function(data){
-                console.log(data);
-            },
-            'json'
-        );
-    } 
+    }
 });
+
+var clicPrevi = 0;
+
+$("#previsu").click(function(){
+    clicPrevi++;
+    if(clicPrevi%2){
+        $("#previsu").html("Retour Edition");
+        $("#page_drop").removeClass("page_drop");
+        $("#menu").hide();
+        $("#page").css("background-color", "white");
+        $("body").css("background-color", "white");
+        $(".column").removeClass("columnBorder");
+        $(".edit").hide();
+        $("#save").show();
+    }
+    else{
+        $("#previsu").html("Prévisualisation magique");
+        $("#page_drop").addClass("page_drop");
+        $("#menu").show();
+        $("#page").css("background-color", "#DDC9FF");
+        $("body").css("background-color", "#FFB2A3");
+        $(".column").addClass("columnBorder");
+        $(".edit").show();
+        $("#save").hide();
+    }
+});
+
+$("#save").click(function(){
+    //ajax qui renvoi tout le HTML dans la bdd.
+    $.post(
+        'article_ajax.php',
+        {
+            "contenu": JSON.stringify(contenu)
+        },
+        function(data){
+            $("#message").html(data);
+        },
+        'json'
+    )
+})
+
 
 

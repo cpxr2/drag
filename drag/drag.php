@@ -38,8 +38,18 @@
 
 
                 <!-- la zone de drop-->
-                <div class="col-sm-10" id="page_drop">
+                <div class="col-sm-10 page_drop" id="page_drop">
                     <ul></ul>
+                </div>
+                <!--bouton previsualisaton et save-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-secondary" id="previsu">Prévisualisation magique</button>
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn btn-secondary" id="save">Sauvegarder</button>
+                    </div>
+                    <div id="message"></div>
                 </div>
 
                 <!-- ****************************** MODAL *************************-->
@@ -74,7 +84,7 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
                 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSGviqWFmjq6gjLveBMNdzAwpj11SkD_o"></script>
                 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
-                <!--<script src="js/fonctions.js"></script>-->
+                <script src="js/modal.js"></script>
                 <script src="js/script.js"></script>
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
